@@ -1,14 +1,24 @@
 'use client';
+
+import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 // import Image from "next/image";
 const Page = () => {
-   const trpc = useTRPC();
-   const {data} = useQuery(trpc.hello.queryOptions({text: "Utkarsh"}))
+  const trpc = useTRPC();
+  const invoke = useMutation(trpc.invoke.mutationOptions({
+     onSuccess: () => {
+          toast.success("Background job started")
+     }
+  }));
+
   return (
        <div className="bg-black-800">
-            {data}
+            <Button disabled={invoke.isPending} onClick={() => invoke.mutate({text: "Utkarsh"})}>
+               Test
+            </Button>
        </div>
   );
 }
